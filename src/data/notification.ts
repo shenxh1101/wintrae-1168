@@ -1,4 +1,4 @@
-import { Notification, ProblemReport } from '@/types';
+import { Notification, ProblemReport, FeedbackMessage } from '@/types';
 
 export const notificationList: Notification[] = [
   {
@@ -39,22 +39,75 @@ export const notificationList: Notification[] = [
   },
 ];
 
+const msgInit = (id: string, content: string, createdAt: string, hasReply: boolean, reply?: string): FeedbackMessage[] => {
+  const arr: FeedbackMessage[] = [
+    {
+      id: `msg-${id}-init`,
+      role: 'member',
+      content,
+      createdAt,
+      statusNote: '提交反馈，等待处理',
+    },
+    {
+      id: `msg-${id}-sys1`,
+      role: 'system',
+      content: '已通知指挥处理，通常会在24小时内回复',
+      createdAt,
+      statusNote: '状态变更：待回复',
+    },
+  ];
+  if (hasReply && reply) {
+    arr.push({
+      id: `msg-${id}-rep`,
+      role: 'conductor',
+      content: reply,
+      createdAt: '2024-01-21 09:10',
+      statusNote: '指挥已查看并给出处理建议',
+    });
+    arr.push({
+      id: `msg-${id}-sys2`,
+      role: 'system',
+      content: '指挥已回复，建议查看后继续练习确认问题是否解决',
+      createdAt: '2024-01-21 09:10',
+      statusNote: '状态变更：指挥已回复，等待成员确认',
+    });
+  }
+  return arr;
+};
+
 export const problemReports: ProblemReport[] = [
   {
-    id: '1',
+    id: 'demo-1',
     repertoireId: '1',
-    part: '女高音',
-    description: '《黄河大合唱》第二乐章高音部分比较难把握，希望能有更多的示范音频。',
+    voicePart: 'soprano',
+    content:
+      '《黄河大合唱》第二乐章的高音部分比较难把握，练习时总是破音，希望有更慢速的示范音频，以及详细的气息控制说明。',
     createdAt: '2024-01-20 15:30',
     status: 'replied',
-    reply: '已收到您的反馈，我们会尽快补充相关的示范音频。建议先从慢速练习开始，逐步提高音准。',
+    replyContent:
+      '已收到您的反馈，建议按以下步骤练习：\n1. 先用 0.6x 慢速单独练女高音声部，找到换声点\n2. 高音前注意提前偷气，横膈膜保持支撑\n3. 明日排练时我会让大家单独演唱这一段，现场一对一指导\n\n示范音频我会在今晚上传到服务器，注意查收。',
+    replyTime: '2024-01-21 09:10',
+    messages: msgInit(
+      '1',
+      '《黄河大合唱》第二乐章的高音部分比较难把握，练习时总是破音，希望有更慢速的示范音频，以及详细的气息控制说明。',
+      '2024-01-20 15:30',
+      true,
+      '已收到您的反馈，建议按以下步骤练习：\n1. 先用 0.6x 慢速单独练女高音声部，找到换声点\n2. 高音前注意提前偷气，横膈膜保持支撑\n3. 明日排练时我会让大家单独演唱这一段，现场一对一指导\n\n示范音频我会在今晚上传到服务器，注意查收。'
+    ),
   },
   {
-    id: '2',
+    id: 'demo-2',
     repertoireId: '6',
-    part: '女高音',
-    description: '《天路》的转调部分总是唱不准，希望指挥能在排练时重点讲解。',
+    voicePart: 'soprano',
+    content:
+      '《天路》的转调部分（第37小节起）总是唱不准，跟其他声部合的时候容易跑调，希望指挥能在排练时重点讲解这个转调的技巧。',
     createdAt: '2024-01-22 10:15',
     status: 'pending',
+    messages: msgInit(
+      '2',
+      '《天路》的转调部分（第37小节起）总是唱不准，跟其他声部合的时候容易跑调，希望指挥能在排练时重点讲解这个转调的技巧。',
+      '2024-01-22 10:15',
+      false
+    ),
   },
 ];

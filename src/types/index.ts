@@ -9,17 +9,19 @@ export interface Repertoire {
   duration: string;
   pages: number;
   audioUrl?: string;
-  parts: VoicePart[];
+  parts: VoicePartDetail[];
   proficiency?: number;
   lastPracticed?: string;
 }
 
-export interface VoicePart {
+export interface VoicePartDetail {
   id: string;
   name: string;
-  type: 'soprano' | 'alto' | 'tenor' | 'bass';
+  type: VoicePart;
   audioUrl: string;
 }
+
+export type VoicePart = 'soprano' | 'alto' | 'tenor' | 'bass' | 'full';
 
 export interface Rehearsal {
   id: string;
@@ -33,6 +35,7 @@ export interface Rehearsal {
   status: 'upcoming' | 'ongoing' | 'completed';
   signedIn?: boolean;
   leaveApplied?: boolean;
+  leaveReason?: string;
   seatMapUrl?: string;
 }
 
@@ -46,13 +49,26 @@ export interface Notification {
   priority: 'high' | 'medium' | 'low';
 }
 
+export interface DifficultSegment {
+  id: string;
+  name: string;
+  startTime: number;
+  endTime: number;
+  occurredCount?: number;
+}
+
 export interface PracticeRecord {
   id: string;
   repertoireId: string;
   date: string;
   durationMinutes: number;
-  voicePart?: string;
+  voicePart: VoicePart;
+  speed: number;
+  loopSegments?: string[];
+  difficultSegments?: DifficultSegment[];
   notes?: string;
+  proficiencyDelta?: number;
+  createdAt: string;
 }
 
 export interface UserProgress {
@@ -73,7 +89,15 @@ export interface Task {
   repertoireId?: string;
 }
 
-export type VoicePart = 'soprano' | 'alto' | 'tenor' | 'bass' | 'full';
+export type FeedbackMessageRole = 'member' | 'conductor' | 'system';
+
+export interface FeedbackMessage {
+  id: string;
+  role: FeedbackMessageRole;
+  content: string;
+  createdAt: string;
+  statusNote?: string;
+}
 
 export interface ProblemReport {
   id: string;
@@ -81,7 +105,10 @@ export interface ProblemReport {
   voicePart: VoicePart;
   content: string;
   createdAt: string;
-  status: 'pending' | 'replied' | 'resolved';
+  status: 'pending' | 'replied' | 'resolved' | 'escalated';
+  messages: FeedbackMessage[];
   replyContent?: string;
   replyTime?: string;
+  resolution?: string;
+  tags?: string[];
 }

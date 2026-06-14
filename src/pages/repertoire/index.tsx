@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, Input, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import RepertoireCard from '@/components/RepertoireCard';
 import { repertoireList, categories } from '@/data/repertoire';
 import { Repertoire } from '@/types';
+import { useChoirStore } from '@/store';
 import classnames from 'classnames';
 
 const RepertoirePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchText, setSearchText] = useState('');
-  const [filteredList, setFilteredList] = useState<Repertoire[]>(repertoireList);
+  const { repertoireProficiencies } = useChoirStore();
 
-  useEffect(() => {
-    filterRepertoire();
-  }, [activeCategory, searchText]);
-
-  const filterRepertoire = () => {
-    let list = repertoireList;
+  const filteredList = useMemo<Repertoire[]>(() => {
+    let list = repertoireList.map((r) => ({
+      ...r,
+      proficiency: repertoireProficiencies[r.id] ?? r.proficiency,
+    }));
     
     if (activeCategory !== 'all') {
       list = list.filter(item => item.category === activeCategory);
@@ -32,8 +32,8 @@ const RepertoirePage: React.FC = () => {
       );
     }
     
-    setFilteredList(list);
-  };
+    return list;
+  }, [activeCategory, searchText, repertoireProficiencies]);
 
   const handlePullDownRefresh = () => {
     setTimeout(() => {
@@ -49,7 +49,9 @@ const RepertoirePage: React.FC = () => {
   }, []);
 
   const totalCount = repertoireList.length;
-  const masteredCount = repertoireList.filter(r => (r.proficiency || 0) >= 80).length;
+  const masteredCount = repertoireList.filter(
+    (r) => (repertoireProficiencies[r.id] ?? r.proficiency ?? 0) >= 80
+  ).length;
 
   return (
     <View className={styles.page}>

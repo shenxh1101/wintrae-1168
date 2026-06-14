@@ -1,7 +1,16 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import Taro from '@tarojs/taro';
-import { Rehearsal, Notification, ProblemReport, Task, PracticeRecord } from '@/types';
+import {
+  Rehearsal,
+  Notification,
+  ProblemReport,
+  Task,
+  PracticeRecord,
+  FeedbackMessage,
+  VoicePart,
+  DifficultSegment,
+} from '@/types';
 
 interface ChoirStore {
   // ===== 排练状态 =====
@@ -18,8 +27,20 @@ interface ChoirStore {
 
   // ===== 问题反馈 =====
   problemReports: ProblemReport[];
-  addProblemReport: (report: Omit<ProblemReport, 'id' | 'createdAt' | 'status'>) => void;
-  updateProblemStatus: (reportId: string, status: ProblemReport['status'], reply?: string) => void;
+  setProblemReports: (reports: ProblemReport[]) => void;
+  addProblemReport: (report: Omit<ProblemReport, 'id' | 'createdAt' | 'status' | 'messages'>) => void;
+  updateProblemStatus: (
+    reportId: string,
+    status: ProblemReport['status'],
+    reply?: string,
+    conductorNote?: string
+  ) => void;
+  addFeedbackMessage: (
+    reportId: string,
+    role: FeedbackMessage['role'],
+    content: string,
+    statusNote?: string
+  ) => void;
 
   // ===== 个人进度 =====
   checkInDates: string[];
@@ -41,7 +62,12 @@ interface ChoirStore {
 
   // ===== 练习记录 =====
   practiceRecords: PracticeRecord[];
-  addPracticeRecord: (record: Omit<PracticeRecord, 'id'>) => void;
+  setPracticeRecords: (records: PracticeRecord[]) => void;
+  addPracticeRecord: (
+    record: Omit<PracticeRecord, 'id' | 'createdAt' | 'date'> & {
+      date?: string;
+    }
+  ) => void;
 }
 
 const TaroStorage = {
@@ -69,6 +95,9 @@ const TaroStorage = {
     }
   },
 };
+
+const todayStr = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 export const useChoirStore = create<ChoirStore>()(
   persist(
@@ -105,29 +134,89 @@ export const useChoirStore = create<ChoirStore>()(
 
       // ===== 问题反馈 =====
       problemReports: [],
+      setProblemReports: (problemReports) => set({ problemReports }),
       addProblemReport: (report) => {
+        const initialMessage: FeedbackMessage = {
+          id: `msg-${Date.now()}-init`,
+          role: 'member',
+          content: report.content,
+          createdAt: new Date().toLocaleString('zh-CN'),
+          statusNote: '提交反馈，等待处理',
+        };
+        const systemMessage: FeedbackMessage = {
+          id: `msg-${Date.now()}-sys`,
+          role: 'system',
+          content: '已通知指挥处理，通常会在24小时内回复',
+          createdAt: new Date().toLocaleString('zh-CN'),
+          statusNote: '状态变更：待回复',
+        };
         const newReport: ProblemReport = {
           ...report,
           id: `report-${Date.now()}`,
           createdAt: new Date().toLocaleString('zh-CN'),
           status: 'pending',
+          messages: [initialMessage, systemMessage],
         };
         set((state) => ({
           problemReports: [newReport, ...state.problemReports],
         }));
       },
-      updateProblemStatus: (reportId, status, reply) =>
+      updateProblemStatus: (reportId, status, reply, conductorNote) =>
         set((state) => ({
-          problemReports: state.problemReports.map((r) =>
-            r.id === reportId
-              ? {
-                  ...r,
-                  status,
-                  replyContent: reply || r.replyContent,
-                  replyTime: new Date().toLocaleString('zh-CN'),
-                }
-              : r
-          ),
+          problemReports: state.problemReports.map((r) => {
+            if (r.id !== reportId) return r;
+            const nextMessages: FeedbackMessage[] = [...r.messages];
+            if (reply) {
+              nextMessages.push({
+                id: `msg-${Date.now()}-rep`,
+                role: 'conductor',
+                content: reply,
+                createdAt: new Date().toLocaleString('zh-CN'),
+                statusNote: conductorNote,
+              });
+            }
+            const statusMap: Record<ProblemReport['status'], string> = {
+              pending: '待指挥回复',
+              replied: '指挥已回复，等待成员确认',
+              resolved: '问题已解决，已结案',
+              escalated: '已升级，等待处理方案',
+            };
+            nextMessages.push({
+              id: `msg-${Date.now()}-status`,
+              role: 'system',
+              content: conductorNote || statusMap[status],
+              createdAt: new Date().toLocaleString('zh-CN'),
+              statusNote: `状态变更：${statusMap[status]}`,
+            });
+            return {
+              ...r,
+              status,
+              replyContent: reply || r.replyContent,
+              replyTime: new Date().toLocaleString('zh-CN'),
+              resolution: status === 'resolved' ? reply || conductorNote : r.resolution,
+              messages: nextMessages,
+            };
+          }),
+        })),
+      addFeedbackMessage: (reportId, role, content, statusNote) =>
+        set((state) => ({
+          problemReports: state.problemReports.map((r) => {
+            if (r.id !== reportId) return r;
+            const msg: FeedbackMessage = {
+              id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+              role,
+              content,
+              createdAt: new Date().toLocaleString('zh-CN'),
+              statusNote,
+            };
+            const autoStatus =
+              role === 'member' && r.status === 'replied' ? 'replied' : r.status;
+            return {
+              ...r,
+              messages: [...r.messages, msg],
+              status: autoStatus,
+            };
+          }),
         })),
 
       // ===== 个人进度 =====
@@ -136,13 +225,12 @@ export const useChoirStore = create<ChoirStore>()(
         set((state) => {
           if (state.checkInDates.includes(date)) return state;
           const newDates = [...state.checkInDates, date].sort();
-          // 计算连续打卡
           let streak = 0;
           const today = new Date(date);
           for (let i = 0; i < newDates.length; i++) {
             const checkDate = new Date(today);
             checkDate.setDate(checkDate.getDate() - i);
-            const dateStr = checkDate.toISOString().split('T')[0];
+            const dateStr = todayStr(checkDate);
             if (newDates.includes(dateStr)) {
               streak++;
             } else {
@@ -200,14 +288,49 @@ export const useChoirStore = create<ChoirStore>()(
 
       // ===== 练习记录 =====
       practiceRecords: [],
+      setPracticeRecords: (practiceRecords) => set({ practiceRecords }),
       addPracticeRecord: (record) => {
+        const now = new Date();
+        const dateVal = record.date || todayStr(now);
+        const proficiencyDelta =
+          record.proficiencyDelta || Math.max(1, Math.ceil(record.durationMinutes / 5));
         const newRecord: PracticeRecord = {
           ...record,
-          id: `practice-${Date.now()}`,
+          date: dateVal,
+          id: `practice-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          createdAt: now.toLocaleString('zh-CN'),
+          proficiencyDelta,
+          voicePart: record.voicePart || 'full',
+          speed: record.speed || 1,
         };
-        set((state) => ({
-          practiceRecords: [newRecord, ...state.practiceRecords],
-        }));
+        set((state) => {
+          const checkInDates = state.checkInDates.includes(dateVal)
+            ? state.checkInDates
+            : [...state.checkInDates, dateVal].sort();
+          let streak = 0;
+          const today = new Date(dateVal);
+          for (let i = 0; i < checkInDates.length; i++) {
+            const checkDate = new Date(today);
+            checkDate.setDate(checkDate.getDate() - i);
+            const ds = todayStr(checkDate);
+            if (checkInDates.includes(ds)) streak++;
+            else break;
+          }
+          const newProfs = { ...state.repertoireProficiencies };
+          newProfs[newRecord.repertoireId] = Math.max(
+            0,
+            Math.min(100, (newProfs[newRecord.repertoireId] || 0) + proficiencyDelta)
+          );
+          return {
+            practiceRecords: [newRecord, ...state.practiceRecords],
+            totalPracticeDays: checkInDates.length,
+            streak,
+            checkInDates,
+            totalPracticeHours:
+              state.totalPracticeHours + newRecord.durationMinutes / 60,
+            repertoireProficiencies: newProfs,
+          };
+        });
       },
     }),
     {
@@ -216,3 +339,38 @@ export const useChoirStore = create<ChoirStore>()(
     }
   )
 );
+
+export function groupPracticeRecordsByRepertoire(
+  records: PracticeRecord[],
+  repertoireId: string
+) {
+  return records.filter((r) => r.repertoireId === repertoireId);
+}
+
+export function groupPracticeRecordsByVoicePart(records: PracticeRecord[]) {
+  const map: Record<VoicePart, PracticeRecord[]> = {
+    soprano: [],
+    alto: [],
+    tenor: [],
+    bass: [],
+    full: [],
+  };
+  records.forEach((r) => {
+    if (map[r.voicePart]) map[r.voicePart].push(r);
+  });
+  return map;
+}
+
+export function aggregateDifficultSegments(records: PracticeRecord[]) {
+  const agg: Record<string, DifficultSegment & { _count: number }> = {};
+  records.forEach((r) => {
+    (r.difficultSegments || []).forEach((seg) => {
+      if (!agg[seg.id]) {
+        agg[seg.id] = { ...seg, _count: 0 };
+      }
+      agg[seg.id]._count += 1;
+      agg[seg.id].occurredCount = agg[seg.id]._count;
+    });
+  });
+  return Object.values(agg).sort((a, b) => b._count - a._count);
+}

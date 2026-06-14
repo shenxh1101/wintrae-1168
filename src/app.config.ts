@@ -8,6 +8,8 @@ export default defineAppConfig({
     'pages/repertoire-detail/index',
     'pages/schedule-detail/index',
     'pages/practice-detail/index',
+    'pages/practice-archive/index',
+    'pages/feedback-detail/index',
   ],
   window: {
     backgroundTextStyle: 'light',

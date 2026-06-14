@@ -7,7 +7,7 @@ import { loopSegments, speedOptions } from '@/data/practice';
 import { getPartColor } from '@/utils';
 import { useAudioPlayer, LoopSegment } from '@/hooks/useAudioPlayer';
 import { useChoirStore } from '@/store';
-import { Repertoire } from '@/types';
+import { Repertoire, VoicePart, DifficultSegment } from '@/types';
 import classnames from 'classnames';
 
 const PracticeDetailPage: React.FC = () => {
@@ -15,12 +15,12 @@ const PracticeDetailPage: React.FC = () => {
   const [repertoire, setRepertoire] = useState<Repertoire | null>(null);
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [practiceConfirmed, setPracticeConfirmed] = useState(false);
+  const [selectedDifficultSegments, setSelectedDifficultSegments] = useState<string[]>([]);
   const startTimeRef = useRef<number>(Date.now());
 
-  const partType = (router.params.part as string) || 'soprano';
+  const partType = ((router.params.part as string) || 'soprano') as VoicePart;
 
   const {
-    incrementProficiency,
     addPracticeRecord,
   } = useChoirStore();
 
@@ -91,6 +91,9 @@ const PracticeDetailPage: React.FC = () => {
       return;
     }
     audio.setActiveLoop(loopId);
+    setSelectedDifficultSegments((prev) =>
+      prev.includes(loopId) ? prev : [...prev, loopId]
+    );
     Taro.showToast({
       title: '已选中难点片段',
       icon: 'none',
@@ -103,19 +106,41 @@ const PracticeDetailPage: React.FC = () => {
     if (!repertoire) return;
     const minutes = Math.max(1, Math.floor((Date.now() - startTimeRef.current) / 60000));
 
+    const activeLoopNames = loopSegments
+      .filter((s) => selectedDifficultSegments.includes(s.id) || audio.activeLoopId === s.id)
+      .map((s) => s.name);
+
+    const difficultSegments: DifficultSegment[] = (
+      selectedDifficultSegments.includes(audio.activeLoopId || '')
+        ? selectedDifficultSegments
+        : audio.activeLoopId
+        ? [...selectedDifficultSegments, audio.activeLoopId]
+        : selectedDifficultSegments
+    )
+      .map((sid) => loopSegments.find((s) => s.id === sid))
+      .filter(Boolean)
+      .map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        startTime: s.startTime,
+        endTime: s.endTime,
+      }));
+
     addPracticeRecord({
       repertoireId: repertoire.id,
-      date: new Date().toISOString().split('T')[0],
-      duration: minutes,
-      part: partType,
+      durationMinutes: minutes,
+      voicePart: partType,
+      speed: audio.speed,
+      loopSegments: activeLoopNames,
+      difficultSegments,
+      notes: minutes >= 10 ? (audio.speed < 1 ? '使用慢速练习' : audio.speed > 1 ? '提速练习完成' : '正常速度练习') : '短练一次',
     });
-    incrementProficiency(repertoire.id, Math.ceil(minutes / 5));
     setPracticeConfirmed(true);
     Taro.showToast({
       title: `已记录 ${minutes} 分钟练习`,
       icon: 'success',
     });
-    console.log('[Practice] 确认练习完成:', minutes, '分钟');
+    console.log('[Practice] 确认练习完成:', minutes, '分钟, 速度:', audio.speed, '声部:', partType);
   };
 
   const handleProgressChange = (e: any) => {

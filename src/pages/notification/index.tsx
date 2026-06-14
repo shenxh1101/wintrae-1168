@@ -223,15 +223,11 @@ const NotificationPage: React.FC = () => {
               <View
                 key={report.id}
                 className={styles.feedbackCard}
-                onClick={() => {
-                  if (report.status === 'replied') {
-                    Taro.showModal({
-                      title: '指挥回复',
-                      content: report.replyContent || '暂无回复',
-                      showCancel: false,
-                    });
-                  }
-                }}
+                onClick={() =>
+                  Taro.navigateTo({
+                    url: `/pages/feedback-detail/index?id=${report.id}`,
+                  })
+                }
               >
                 <View className={styles.feedbackHeader}>
                   <View style={{ display: 'flex', alignItems: 'center', gap: '12rpx', flexWrap: 'wrap' }}>
@@ -342,37 +338,15 @@ const NotificationPage: React.FC = () => {
 
                 <View className={styles.feedbackFooter}>
                   <Text className={styles.feedbackTime}>{report.createdAt}</Text>
-                  {report.status === 'replied' && (
-                    <View
-                      style={{
-                        fontSize: '22rpx',
-                        color: '#6366f1',
-                        fontWeight: 500,
-                      }}
-                    >
-                      查看回复 ›
-                    </View>
-                  )}
-                  {report.status === 'pending' && (
-                    <View
-                      style={{
-                        fontSize: '22rpx',
-                        color: '#64748b',
-                      }}
-                      onClick={() => {
-                        Taro.showActionSheet({
-                          itemList: ['标记为已读回复（演示）', '删除此反馈'],
-                          success: (res) => {
-                            if (res.tapIndex === 0) {
-                              updateProblemStatus(report.id, 'replied', '已为你自动处理，演示模式下指挥回复示例：继续加油练习！');
-                            }
-                          },
-                        });
-                      }}
-                    >
-                      更多操作 ›
-                    </View>
-                  )}
+                  <View
+                    style={{
+                      fontSize: '22rpx',
+                      color: '#6366f1',
+                      fontWeight: 500,
+                    }}
+                  >
+                    查看对话 ›
+                  </View>
                 </View>
               </View>
             );

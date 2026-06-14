@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, Image, Textarea } from '@tarojs/components';
 import Taro, { useRouter, useDidShow } from '@tarojs/taro';
 import styles from './index.module.scss';
 import { repertoireList } from '@/data/repertoire';
 import { useChoirStore } from '@/store';
 import SeatMap from '@/components/SeatMap';
+import { getProficiencyColor } from '@/utils';
 import classnames from 'classnames';
 
 const ScheduleDetailPage: React.FC = () => {
   const router = useRouter();
   const rehearsalId = router.params.id;
-  const { rehearsals, setRehearsals, signIn, submitLeave } = useChoirStore();
+  const { rehearsals, setRehearsals, signIn, submitLeave, repertoireProficiencies, practiceRecords } = useChoirStore();
   const rehearsal = rehearsals.find((r) => r.id === rehearsalId);
 
   const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -55,8 +56,51 @@ const ScheduleDetailPage: React.FC = () => {
     if (!rehearsal) return [];
     return rehearsal.repertoireIds
       .map((id) => repertoireList.find((r) => r.id === id))
-      .filter(Boolean);
+      .filter(Boolean) as typeof repertoireList;
   };
+
+  const readiness = useMemo(() => {
+    const reps = getRepertoires();
+    const repStats = reps.map((rep) => {
+      const proficiency = repertoireProficiencies[rep.id] || 0;
+      const recs = practiceRecords.filter((r) => r.repertoireId === rep.id);
+      const totalMinutes = recs.reduce((s, r) => s + r.durationMinutes, 0);
+      const lastRecord = recs[0];
+      const isReady = proficiency >= 70;
+      const status =
+        proficiency >= 85
+          ? { label: '非常充分', color: '#10b981', bg: 'rgba(16,185,129,0.12)' }
+          : proficiency >= 70
+          ? { label: '准备就绪', color: '#06b6d4', bg: 'rgba(6,182,212,0.12)' }
+          : proficiency >= 40
+          ? { label: '还需加强', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' }
+          : { label: '未准备好', color: '#ef4444', bg: 'rgba(239,68,68,0.12)' };
+      return {
+        id: rep.id,
+        rep,
+        proficiency,
+        totalMinutes,
+        sessions: recs.length,
+        lastPracticed: lastRecord?.createdAt || '还没练过',
+        isReady,
+        status,
+      };
+    });
+    const avgProficiency =
+      repStats.length > 0
+        ? Math.round(repStats.reduce((s, r) => s + r.proficiency, 0) / repStats.length)
+        : 0;
+    const readyCount = repStats.filter((x) => x.isReady).length;
+    const overallLabel =
+      avgProficiency >= 80
+        ? '整体准备良好，加油保持！'
+        : avgProficiency >= 60
+        ? '整体基本就绪，还差临门一脚'
+        : avgProficiency >= 40
+        ? '还需多多练习，重点抓弱项'
+        : '准备不足，建议今天就开始';
+    return { repStats, avgProficiency, readyCount, totalCount: repStats.length, overallLabel };
+  }, [repertoireProficiencies, practiceRecords, rehearsal?.repertoireIds, rehearsal]);
 
   const handleSignIn = () => {
     if (rehearsal?.signedIn) {
@@ -233,47 +277,332 @@ const ScheduleDetailPage: React.FC = () => {
       </View>
 
       <View className={styles.section}>
-        <Text className={styles.sectionTitle}>排练曲目</Text>
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}
+        >
+          <Text className={styles.sectionTitle}>📊 个人准备度</Text>
+          <View
+            style={{
+              fontSize: 22,
+              padding: '6rpx 18rpx',
+              background:
+                readiness.avgProficiency >= 70
+                  ? 'rgba(16,185,129,0.12)'
+                  : readiness.avgProficiency >= 50
+                  ? 'rgba(245,158,11,0.12)'
+                  : 'rgba(239,68,68,0.12)',
+              color:
+                readiness.avgProficiency >= 70
+                  ? '#10b981'
+                  : readiness.avgProficiency >= 50
+                  ? '#f59e0b'
+                  : '#ef4444',
+              borderRadius: 20,
+              fontWeight: 700,
+            }}
+          >
+            {readiness.readyCount}/{readiness.totalCount} 达标
+          </View>
+        </View>
+
+        <View
+          style={{
+            padding: 24,
+            background:
+              readiness.avgProficiency >= 70
+                ? 'linear-gradient(135deg, rgba(16,185,129,0.10) 0%, rgba(6,182,212,0.10) 100%)'
+                : readiness.avgProficiency >= 50
+                ? 'linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(239,68,68,0.08) 100%)'
+                : 'linear-gradient(135deg, rgba(239,68,68,0.10) 0%, rgba(99,102,241,0.10) 100%)',
+            borderRadius: 16,
+            marginBottom: 20,
+          }}
+        >
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 26,
+                fontWeight: 600,
+                color: '#334155',
+              }}
+            >
+              综合熟练度
+            </Text>
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 6,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 56,
+                  fontWeight: 800,
+                  color: getProficiencyColor(readiness.avgProficiency),
+                  lineHeight: 1,
+                }}
+              >
+                {readiness.avgProficiency}
+              </Text>
+              <Text style={{ fontSize: 24, color: '#64748b' }}>%</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: '100%',
+              height: 16,
+              background: 'rgba(255,255,255,0.6)',
+              borderRadius: 8,
+              overflow: 'hidden',
+            }}
+          >
+            <View
+              style={{
+                width: `${readiness.avgProficiency}%`,
+                height: '100%',
+                background: getProficiencyColor(readiness.avgProficiency),
+                borderRadius: 8,
+                transition: 'width 0.3s',
+              }}
+            />
+          </View>
+          <Text
+            style={{
+              marginTop: 12,
+              fontSize: 24,
+              color: '#475569',
+              lineHeight: 1.5,
+            }}
+          >
+            {readiness.overallLabel}
+          </Text>
+        </View>
+
+        <Text
+          style={{
+            fontSize: 26,
+            fontWeight: 600,
+            color: '#1e293b',
+            marginBottom: 16,
+            display: 'block',
+          }}
+        >
+          各曲目准备情况
+        </Text>
         <View className={styles.repertoireList}>
-          {repertoires.map((rep) =>
-            rep ? (
+          {readiness.repStats.map((stat) => {
+            const rep = stat.rep;
+            return (
               <View
-                key={rep.id}
+                key={stat.id}
                 className={styles.repertoireItem}
-                onClick={() => handleViewScore(rep.id)}
+                onClick={() => handleViewScore(stat.id)}
+                style={{
+                  padding: 20,
+                  alignItems: 'flex-start',
+                  gap: 16,
+                }}
               >
                 <Image
                   className={styles.repertoireCover}
                   src={rep.cover}
                   mode='aspectFill'
+                  style={{ width: 72, height: 72, borderRadius: 12 }}
                 />
-                <View className={styles.repertoireInfo}>
-                  <Text className={styles.repertoireName}>{rep.title}</Text>
-                  <Text className={styles.repertoireMeta}>
-                    {rep.composer} · {rep.duration}
-                  </Text>
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'column', gap: '8rpx' }}>
-                  <Text className={styles.arrow}>›</Text>
+                <View className={styles.repertoireInfo} style={{ flex: 1 }}>
                   <View
                     style={{
-                      fontSize: '22rpx',
-                      color: '#6366f1',
-                      background: '#eef2ff',
-                      padding: '6rpx 12rpx',
-                      borderRadius: '20rpx',
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      startPractice(rep.id);
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
                     }}
                   >
-                    去练习
+                    <View style={{ flex: 1, marginRight: 12 }}>
+                      <Text
+                        style={{
+                          fontSize: 28,
+                          fontWeight: 600,
+                          color: '#1e293b',
+                          display: 'block',
+                        }}
+                      >
+                        {rep.title}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 22,
+                          color: '#64748b',
+                          marginTop: 4,
+                          display: 'block',
+                        }}
+                      >
+                        {rep.composer} · {rep.duration}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        fontSize: 20,
+                        padding: '6rpx 14rpx',
+                        background: stat.status.bg,
+                        color: stat.status.color,
+                        borderRadius: 16,
+                        fontWeight: 700,
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {stat.status.label}
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 14,
+                      marginTop: 10,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <View style={{ flex: 1, minWidth: 160 }}>
+                      <View
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          marginBottom: 6,
+                        }}
+                      >
+                        <Text style={{ fontSize: 20, color: '#64748b' }}>熟练度</Text>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 700,
+                            color: getProficiencyColor(stat.proficiency),
+                          }}
+                        >
+                          {stat.proficiency}%
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          height: 8,
+                          background: '#e2e8f0',
+                          borderRadius: 4,
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <View
+                          style={{
+                            width: `${stat.proficiency}%`,
+                            height: '100%',
+                            background: getProficiencyColor(stat.proficiency),
+                            borderRadius: 4,
+                          }}
+                        />
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-end',
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          color: '#64748b',
+                        }}
+                      >
+                        练过 <Text style={{ fontWeight: 700, color: '#6366f1' }}>{stat.sessions}</Text> 次
+                        {' · '}共 <Text style={{ fontWeight: 700, color: '#6366f1' }}>{stat.totalMinutes}</Text> 分
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: '#94a3b8',
+                          marginTop: 2,
+                        }}
+                      >
+                        {stat.lastPracticed}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      display: 'flex',
+                      gap: 10,
+                      marginTop: 16,
+                      flexWrap: 'wrap',
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <View
+                      onClick={() => handleViewScore(stat.id)}
+                      style={{
+                        padding: '12rpx 20rpx',
+                        background: '#f8fafc',
+                        color: '#475569',
+                        fontSize: 22,
+                        borderRadius: 24,
+                        fontWeight: 500,
+                        border: '1rpx solid #e2e8f0',
+                      }}
+                    >
+                      📖 乐谱
+                    </View>
+                    <View
+                      onClick={() => startPractice(stat.id)}
+                      style={{
+                        padding: '12rpx 22rpx',
+                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                        color: '#fff',
+                        fontSize: 22,
+                        borderRadius: 24,
+                        fontWeight: 600,
+                        boxShadow: '0 4rpx 12rpx rgba(99,102,241,0.25)',
+                      }}
+                    >
+                      🎼 {stat.sessions === 0 ? '开始练习' : '继续练习'}
+                    </View>
+                    {stat.sessions > 0 && (
+                      <View
+                        onClick={() =>
+                          Taro.navigateTo({
+                            url: `/pages/practice-archive/index?id=${stat.id}`,
+                          })
+                        }
+                        style={{
+                          padding: '12rpx 20rpx',
+                          background: stat.isReady ? '#ecfdf5' : '#fffbeb',
+                          color: stat.isReady ? '#10b981' : '#f59e0b',
+                          fontSize: 22,
+                          borderRadius: 24,
+                          fontWeight: 500,
+                        }}
+                      >
+                        📚 练习档案
+                      </View>
+                    )}
                   </View>
                 </View>
               </View>
-            ) : null
-          )}
+            );
+          })}
         </View>
       </View>
 

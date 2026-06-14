@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import PracticeCard from '@/components/PracticeCard';
 import { repertoireList } from '@/data/repertoire';
 import { getPartColor } from '@/utils';
+import { useChoirStore } from '@/store';
+import { Repertoire } from '@/types';
 import classnames from 'classnames';
 
 interface PartInfo {
@@ -22,6 +24,19 @@ const parts: PartInfo[] = [
 
 const PracticePage: React.FC = () => {
   const [activePart, setActivePart] = useState('soprano');
+  const { repertoireProficiencies, practiceRecords } = useChoirStore();
+
+  const enrichedRepertoire: Repertoire[] = useMemo(() => {
+    return repertoireList.map((r) => {
+      const recs = practiceRecords.filter((p) => p.repertoireId === r.id);
+      const lastRec = recs[0];
+      return {
+        ...r,
+        proficiency: repertoireProficiencies[r.id] ?? r.proficiency,
+        lastPracticed: lastRec?.createdAt || r.lastPracticed,
+      };
+    });
+  }, [repertoireProficiencies, practiceRecords]);
 
   const getCurrentPartName = () => {
     const part = parts.find(p => p.type === activePart);
@@ -33,7 +48,14 @@ const PracticePage: React.FC = () => {
     console.log('[Practice] 切换声部:', partType);
   };
 
-  const totalPracticeTime = repertoireList.reduce((sum, r) => sum + (r.proficiency || 0), 0);
+  const totalPracticeTime = enrichedRepertoire.reduce(
+    (sum, r) => sum + (r.proficiency || 0),
+    0
+  );
+
+  const masteredCount = enrichedRepertoire.filter(
+    (r) => (r.proficiency || 0) >= 80
+  ).length;
 
   return (
     <View className={styles.page}>
@@ -66,7 +88,7 @@ const PracticePage: React.FC = () => {
       <View className={styles.listSection}>
         <View className={styles.statsRow}>
           <View className={styles.statCard}>
-            <Text className={styles.statNumber}>{repertoireList.length}</Text>
+            <Text className={styles.statNumber}>{enrichedRepertoire.length}</Text>
             <Text className={styles.statLabel}>可练习曲目</Text>
           </View>
           <View className={styles.statCard}>
@@ -74,17 +96,17 @@ const PracticePage: React.FC = () => {
             <Text className={styles.statLabel}>累计练习(h)</Text>
           </View>
           <View className={styles.statCard}>
-            <Text className={styles.statNumber}>{repertoireList.filter(r => (r.proficiency || 0) >= 80).length}</Text>
+            <Text className={styles.statNumber}>{masteredCount}</Text>
             <Text className={styles.statLabel}>已掌握</Text>
           </View>
         </View>
 
         <View className={styles.sectionHeader}>
           <Text className={styles.sectionTitle}>{getCurrentPartName()}练习曲目</Text>
-          <Text className={styles.sectionSubtitle}>共 {repertoireList.length} 首</Text>
+          <Text className={styles.sectionSubtitle}>共 {enrichedRepertoire.length} 首</Text>
         </View>
 
-        {repertoireList.map(rep => (
+        {enrichedRepertoire.map(rep => (
           <PracticeCard
             key={rep.id}
             repertoire={rep}
@@ -93,7 +115,7 @@ const PracticePage: React.FC = () => {
           />
         ))}
 
-        {repertoireList.length === 0 && (
+        {enrichedRepertoire.length === 0 && (
           <View className={styles.empty}>
             <Text className={styles.emptyIcon}>🎵</Text>
             <Text className={styles.emptyText}>暂无练习曲目</Text>

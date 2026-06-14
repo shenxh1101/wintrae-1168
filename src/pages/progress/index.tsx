@@ -574,8 +574,38 @@ const ProgressPage: React.FC = () => {
               key={item.id}
               className={styles.proficiencyItem}
               onClick={() => {
-                setSelectedProficiency(item.id);
-                setTempProficiency(item.proficiency);
+                const hasRecords = practiceRecords.some((r) => r.repertoireId === item.id);
+                const btns = hasRecords
+                  ? ['查看练习档案', '调整熟练度', '进入练习页']
+                  : ['调整熟练度', '进入练习页'];
+                Taro.showActionSheet({
+                  itemList: btns,
+                  success: (res) => {
+                    if (hasRecords) {
+                      if (res.tapIndex === 0) {
+                        Taro.navigateTo({
+                          url: `/pages/practice-archive/index?id=${item.id}`,
+                        });
+                      } else if (res.tapIndex === 1) {
+                        setSelectedProficiency(item.id);
+                        setTempProficiency(item.proficiency);
+                      } else {
+                        Taro.navigateTo({
+                          url: `/pages/practice-detail/index?id=${item.id}`,
+                        });
+                      }
+                    } else {
+                      if (res.tapIndex === 0) {
+                        setSelectedProficiency(item.id);
+                        setTempProficiency(item.proficiency);
+                      } else if (res.tapIndex === 1) {
+                        Taro.navigateTo({
+                          url: `/pages/practice-detail/index?id=${item.id}`,
+                        });
+                      }
+                    }
+                  },
+                });
               }}
             >
               <Image
@@ -615,6 +645,214 @@ const ProgressPage: React.FC = () => {
             </View>
           ))}
         </View>
+      </View>
+
+      <View className={styles.chartSection}>
+        <View className={styles.sectionHeader}>
+          <Text className={styles.sectionTitle}>📚 练习记录档案</Text>
+          <Text style={{ fontSize: '22rpx', color: '#6366f1' }}>
+            共 {practiceRecords.length} 条
+          </Text>
+        </View>
+
+        {practiceRecords.length === 0 ? (
+          <View
+            style={{
+              textAlign: 'center',
+              padding: '80rpx 0',
+              background: '#fff',
+              borderRadius: '16rpx',
+            }}
+          >
+            <Text style={{ fontSize: 48, display: 'block', marginBottom: 16 }}>🎼</Text>
+            <Text style={{ color: '#94a3b8', display: 'block', marginBottom: 8 }}>
+              还没有练习记录
+            </Text>
+            <Text style={{ color: '#cbd5e1', fontSize: 22 }}>
+              完成一次分声部练习后会自动出现在这里
+            </Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20rpx',
+            }}
+          >
+            {practiceRecords.slice(0, 8).map((rec) => {
+              const rep = repertoireList.find((r) => r.id === rec.repertoireId);
+              const partColorMap: Record<string, string> = {
+                soprano: '#ec4899',
+                alto: '#8b5cf6',
+                tenor: '#06b6d4',
+                bass: '#10b981',
+                full: '#6366f1',
+              };
+              const partNameMap: Record<string, string> = {
+                soprano: '女高音',
+                alto: '女低音',
+                tenor: '男高音',
+                bass: '男低音',
+                full: '全合唱',
+              };
+              return (
+                <View
+                  key={rec.id}
+                  style={{
+                    display: 'flex',
+                    gap: 16,
+                    padding: 20,
+                    background: '#fff',
+                    borderRadius: 16,
+                    boxShadow: '0 2rpx 8rpx rgba(0,0,0,0.05)',
+                  }}
+                  onClick={() =>
+                    Taro.navigateTo({
+                      url: `/pages/practice-archive/index?id=${rec.repertoireId}`,
+                    })
+                  }
+                >
+                  {rep ? (
+                    <Image
+                      src={rep.cover}
+                      style={{
+                        width: 76,
+                        height: 76,
+                        borderRadius: 12,
+                        flexShrink: 0,
+                      }}
+                      mode='aspectFill'
+                    />
+                  ) : null}
+                  <View style={{ flex: 1, overflow: 'hidden' }}>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 26,
+                          fontWeight: 600,
+                          color: '#1e293b',
+                          display: 'block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          marginRight: 12,
+                        }}
+                      >
+                        {rep?.title || '未知曲目'}
+                      </Text>
+                      <View
+                        style={{
+                          fontSize: 20,
+                          padding: '4rpx 14rpx',
+                          borderRadius: 14,
+                          background:
+                            rec.loopSegments && rec.loopSegments.length > 0
+                              ? 'rgba(99,102,241,0.12)'
+                              : '#f8fafc',
+                          color:
+                            rec.loopSegments && rec.loopSegments.length > 0
+                              ? '#6366f1'
+                              : '#64748b',
+                          fontWeight: 500,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {rec.loopSegments && rec.loopSegments.length > 0
+                          ? `${rec.loopSegments.length} 循环段`
+                          : '完整练习'}
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        marginTop: 6,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <View
+                        style={{
+                          fontSize: 20,
+                          padding: '2rpx 12rpx',
+                          borderRadius: 12,
+                          background: partColorMap[rec.voicePart] || '#6366f1',
+                          color: '#fff',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {partNameMap[rec.voicePart] || rec.voicePart}
+                      </View>
+                      <Text style={{ fontSize: 22, color: '#64748b' }}>
+                        {rec.durationMinutes} 分钟
+                      </Text>
+                      <Text style={{ fontSize: 22, color: '#64748b' }}>·</Text>
+                      <Text
+                        style={{
+                          fontSize: 22,
+                          color: rec.speed < 1 ? '#f59e0b' : rec.speed > 1 ? '#10b981' : '#64748b',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {(rec.speed * 100).toFixed(0)}% 速度
+                      </Text>
+                    </View>
+                    {rec.difficultSegments && rec.difficultSegments.length > 0 ? (
+                      <View style={{ marginTop: 8 }}>
+                        <View style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          <Text style={{ fontSize: 20, color: '#94a3b8' }}>卡住:</Text>
+                          {rec.difficultSegments.slice(0, 3).map((seg) => (
+                            <View
+                              key={seg.id}
+                              style={{
+                                fontSize: 18,
+                                padding: '2rpx 10rpx',
+                                borderRadius: 10,
+                                background: '#fef2f2',
+                                color: '#dc2626',
+                                fontWeight: 500,
+                              }}
+                            >
+                              {seg.name}
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    ) : null}
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginTop: 8,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Text style={{ fontSize: 20, color: '#94a3b8' }}>{rec.createdAt}</Text>
+                      {rec.proficiencyDelta ? (
+                        <View
+                          style={{
+                            fontSize: 20,
+                            fontWeight: 700,
+                            color: '#10b981',
+                          }}
+                        >
+                          熟练度 +{rec.proficiencyDelta}%
+                        </View>
+                      ) : null}
+                    </View>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
       </View>
 
       {selectedProficiency && (
