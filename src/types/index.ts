@@ -50,8 +50,8 @@ export interface PracticeRecord {
   id: string;
   repertoireId: string;
   date: string;
-  duration: number;
-  part?: string;
+  durationMinutes: number;
+  voicePart?: string;
   notes?: string;
 }
 
@@ -67,18 +67,21 @@ export interface UserProgress {
 export interface Task {
   id: string;
   title: string;
-  type: 'practice' | 'rehearsal' | 'assignment';
-  deadline: string;
+  type: '练习' | '排练' | '作业';
+  dueDate: string;
   completed: boolean;
   repertoireId?: string;
 }
 
+export type VoicePart = 'soprano' | 'alto' | 'tenor' | 'bass' | 'full';
+
 export interface ProblemReport {
   id: string;
   repertoireId: string;
-  part?: string;
-  description: string;
+  voicePart: VoicePart;
+  content: string;
   createdAt: string;
   status: 'pending' | 'replied' | 'resolved';
-  reply?: string;
+  replyContent?: string;
+  replyTime?: string;
 }

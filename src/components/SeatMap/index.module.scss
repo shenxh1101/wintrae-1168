@@ -1,0 +1,132 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  width: 100%;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 24rpx;
+  box-shadow: $shadow-card;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 20rpx;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+
+.titleIcon {
+  font-size: $font-size-lg;
+}
+
+.stage {
+  margin: 0 auto 32rpx;
+  padding: 20rpx;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: $radius-md;
+  text-align: center;
+  box-shadow: 0 4rpx 12rpx rgba(245, 158, 11, 0.15);
+}
+
+.stageText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: #92400e;
+  letter-spacing: 4rpx;
+}
+
+.seatBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.seatRow {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+
+.seat {
+  width: 80rpx;
+  height: 72rpx;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  font-weight: $font-weight-medium;
+  color: $color-text-white;
+  transition: all $transition-base;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.seatMe {
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 16rpx rgba(99, 102, 241, 0.6);
+  border: 3rpx solid #fff;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 12rpx rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 20rpx rgba(99, 102, 241, 0.8); }
+}
+
+.seatLabel {
+  position: absolute;
+  top: -28rpx;
+  right: -16rpx;
+  padding: 2rpx 10rpx;
+  background: $color-primary;
+  color: #fff;
+  font-size: 18rpx;
+  border-radius: $radius-round;
+  font-weight: $font-weight-bold;
+  white-space: nowrap;
+}
+
+.legend {
+  margin-top: 32rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid $color-divider;
+}
+
+.legendTitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: 16rpx;
+}
+
+.legendRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.legendColor {
+  width: 28rpx;
+  height: 28rpx;
+  border-radius: $radius-xs;
+}
+
+.legendText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}

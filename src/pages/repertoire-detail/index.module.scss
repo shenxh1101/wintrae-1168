@@ -3,12 +3,12 @@
 .page {
   min-height: 100vh;
   background: $color-bg-page;
-  padding-bottom: 160rpx;
+  padding-bottom: 180rpx;
 }
 
 .header {
   position: relative;
-  height: 400rpx;
+  height: 320rpx;
   overflow: hidden;
 }
 
@@ -28,21 +28,35 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+  background: linear-gradient(180deg, rgba(30,41,59,0.3) 0%, rgba(30,41,59,0.85) 100%);
 }
 
 .headerInfo {
   position: absolute;
-  bottom: 32rpx;
-  left: 32rpx;
-  right: 32rpx;
+  bottom: 28rpx;
+  left: $page-padding;
+  right: $page-padding;
   color: $color-text-white;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 10rpx;
+}
+
 .title {
-  font-size: 44rpx;
+  font-size: 40rpx;
   font-weight: $font-weight-bold;
-  margin-bottom: 12rpx;
+}
+
+.categoryTag {
+  padding: 6rpx 16rpx;
+  background: rgba(99, 102, 241, 0.85);
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
 }
 
 .subtitle {
@@ -50,26 +64,51 @@
   opacity: 0.9;
 }
 
+.proficiencyBadge {
+  position: absolute;
+  top: 24rpx;
+  right: $page-padding;
+  padding: 10rpx 20rpx;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+}
+
 .section {
-  margin: $page-spacing $page-padding 0;
+  margin: $spacing-md $page-padding 0;
   background: $color-bg-card;
   border-radius: $radius-lg;
-  padding: 32rpx;
+  padding: 28rpx;
   box-shadow: $shadow-card;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
 }
 
 .sectionTitle {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
-  margin-bottom: 20rpx;
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  gap: 10rpx;
 }
 
 .sectionIcon {
   font-size: $font-size-lg;
+}
+
+.sectionAction {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
 }
 
 .description {
@@ -81,87 +120,219 @@
 .infoGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 24rpx;
+  gap: $spacing-md;
 }
 
 .infoItem {
   width: calc(50% - 12rpx);
+  padding: 16rpx;
+  background: $color-bg-page;
+  border-radius: $radius-md;
 }
 
 .infoLabel {
-  font-size: $font-size-sm;
+  font-size: $font-size-xs;
   color: $color-text-tertiary;
-  margin-bottom: 8rpx;
+  margin-bottom: 6rpx;
 }
 
 .infoValue {
   font-size: $font-size-md;
   color: $color-text-primary;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
 }
 
-.proficiencySection {
+.scoreViewer {
+  margin-top: 8rpx;
+}
+
+.scorePage {
+  width: 100%;
+  height: 420rpx;
+  background: #fffef5;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.staffLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: #d4a574;
+  opacity: 0.6;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      top: calc(25% + #{$i - 1} * 12%);
+    }
+  }
+}
+
+.clef {
+  position: absolute;
+  left: 32rpx;
+  top: 30%;
+  font-size: 80rpx;
+  color: #8b6914;
+}
+
+.notes {
+  position: absolute;
+  top: 0;
+  left: 100rpx;
+  right: 32rpx;
+  bottom: 0;
   display: flex;
   align-items: center;
   gap: 24rpx;
+  flex-wrap: wrap;
 }
 
-.proficiencyCircle {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: conic-gradient(#10b981 65%, #e2e8f0 0);
+.note {
+  font-size: 36rpx;
+  color: #1e293b;
+  padding: 4rpx 8rpx;
+}
+
+.pageNav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
+  margin-top: 16rpx;
 }
 
-.proficiencyInner {
-  width: 80rpx;
-  height: 80rpx;
-  border-radius: 50%;
-  background: $color-bg-card;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.proficiencyText {
+.pageBtn {
+  padding: 10rpx 20rpx;
+  background: $color-bg-page;
+  border-radius: $radius-sm;
   font-size: $font-size-sm;
-  font-weight: $font-weight-bold;
-  color: $color-success;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-bg-hover;
+    transform: scale(0.95);
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
 }
 
-.proficiencyInfo {
-  flex: 1;
+.pageInfo {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
 }
 
-.proficiencyTitle {
+.audioSection {
+  margin-top: 8rpx;
+}
+
+.fullPlayer {
+  padding: 20rpx;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  margin-bottom: 20rpx;
+}
+
+.fullPlayerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.fullPlayerTitle {
   font-size: $font-size-md;
   color: $color-text-primary;
   font-weight: $font-weight-medium;
-  margin-bottom: 8rpx;
 }
 
-.proficiencyDesc {
-  font-size: $font-size-sm;
+.fullPlayerTime {
+  font-size: $font-size-xs;
   color: $color-text-tertiary;
+  font-variant-numeric: tabular-nums;
+}
+
+.fullPlayerProgress {
+  width: 100%;
+  height: 8rpx;
+  background: $color-divider;
+  border-radius: 4rpx;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 12rpx;
+}
+
+.fullPlayerFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: $color-primary-gradient;
+  border-radius: 4rpx;
+  transition: width 0.2s ease;
+}
+
+.fullPlayerControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32rpx;
+}
+
+.ctrlBtn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+  font-size: 28rpx;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+}
+
+.playBtnMain {
+  width: 80rpx;
+  height: 80rpx;
+  background: $color-primary-gradient;
+  border-radius: 50%;
+  color: $color-text-white;
+  font-size: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
 }
 
 .partsList {
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  gap: 14rpx;
 }
 
 .partItem {
   display: flex;
   align-items: center;
-  padding: 20rpx;
+  padding: 18rpx 20rpx;
   background: $color-bg-page;
   border-radius: $radius-md;
   transition: all $transition-base;
+  border: 2rpx solid transparent;
+
+  &.active {
+    background: $color-bg-soft;
+    border-color: $color-primary-light;
+  }
 
   &:active {
     background: $color-bg-hover;
@@ -170,7 +341,7 @@
 
 .partColor {
   width: 8rpx;
-  height: 48rpx;
+  height: 56rpx;
   border-radius: 4rpx;
   margin-right: 20rpx;
 }
@@ -191,16 +362,34 @@
   color: $color-text-tertiary;
 }
 
-.playBtn {
-  width: 64rpx;
-  height: 64rpx;
+.playState {
+  font-size: 22rpx;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  margin-right: 12rpx;
+}
+
+.playIcon {
+  width: 56rpx;
+  height: 56rpx;
   border-radius: 50%;
-  background: $color-primary-gradient;
+  background: $color-bg-card;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 22rpx;
+  color: $color-primary;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.partItem.active .playIcon {
+  background: $color-primary-gradient;
   color: $color-text-white;
-  font-size: 24rpx;
 }
 
 .actionBar {
@@ -224,7 +413,7 @@
   align-items: center;
   justify-content: center;
   font-size: $font-size-md;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
   transition: all $transition-base;
 
   &:active {
@@ -242,4 +431,61 @@
 .btnSecondary {
   background: $color-bg-soft;
   color: $color-primary;
+}
+
+.btnTertiary {
+  background: $color-bg-page;
+  color: $color-text-secondary;
+  flex: 0.8;
+}
+
+.proficiencySelector {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.profSlider {
+  flex: 1;
+  height: 8rpx;
+  background: $color-divider;
+  border-radius: 4rpx;
+  position: relative;
+}
+
+.profFill {
+  height: 100%;
+  border-radius: 4rpx;
+  transition: width 0.2s ease;
+}
+
+.profLabel {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-semibold;
+  min-width: 70rpx;
+  text-align: right;
+}
+
+.starRow {
+  display: flex;
+  gap: 8rpx;
+  margin-top: 16rpx;
+}
+
+.star {
+  font-size: 36rpx;
+  color: $color-border;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &.active {
+    color: $color-warning;
+    text-shadow: 0 0 8rpx rgba(245, 158, 11, 0.4);
+  }
+
+  &:active {
+    transform: scale(1.2);
+  }
 }
