@@ -1,0 +1,375 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.header {
+  background: $color-primary-gradient;
+  padding: 40rpx $page-padding 60rpx;
+  color: $color-text-white;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.userDetails {
+  flex: 1;
+}
+
+.userName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin-bottom: 6rpx;
+}
+
+.userPart {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+}
+
+.checkInSection {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.streakInfo {
+  flex: 1;
+}
+
+.streakNumber {
+  font-size: 48rpx;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+  margin-bottom: 8rpx;
+}
+
+.streakLabel {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+}
+
+.checkInBtn {
+  width: 140rpx;
+  height: 80rpx;
+  border-radius: $radius-button;
+  background: $color-text-white;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+.checkInBtnDone {
+  background: rgba(255, 255, 255, 0.3);
+  color: $color-text-white;
+  box-shadow: none;
+}
+
+.statsSection {
+  margin: -32rpx $page-padding 0;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 28rpx;
+  box-shadow: $shadow-card;
+  display: flex;
+  justify-content: space-around;
+}
+
+.statItem {
+  text-align: center;
+  flex: 1;
+}
+
+.statNumber {
+  font-size: 36rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.section {
+  margin: 24rpx $page-padding 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.weeklyChart {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 28rpx;
+  box-shadow: $shadow-card;
+}
+
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 160rpx;
+  margin-bottom: 16rpx;
+}
+
+.chartBarItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.chartBar {
+  width: 32rpx;
+  background: $color-primary-gradient;
+  border-radius: 16rpx 16rpx 4rpx 4rpx;
+  margin-bottom: 12rpx;
+  transition: height $transition-base;
+  min-height: 8rpx;
+}
+
+.chartDay {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.chartTotal {
+  text-align: center;
+  padding-top: 16rpx;
+  border-top: 1rpx solid $color-divider;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.chartTotal strong {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.taskList {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.taskItem {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid $color-divider;
+  transition: all $transition-base;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.taskCheckbox {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 3rpx solid $color-border;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all $transition-base;
+}
+
+.taskCheckboxDone {
+  background: $color-success;
+  border-color: $color-success;
+}
+
+.taskCheckIcon {
+  color: $color-text-white;
+  font-size: 24rpx;
+  font-weight: $font-weight-bold;
+}
+
+.taskContent {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.taskTitle {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 6rpx;
+}
+
+.taskTitleDone {
+  color: $color-text-tertiary;
+  text-decoration: line-through;
+}
+
+.taskMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.taskType {
+  display: inline-block;
+  padding: 2rpx 10rpx;
+  background: $color-bg-soft;
+  color: $color-primary;
+  border-radius: $radius-xs;
+  margin-right: 8rpx;
+  font-size: 20rpx;
+}
+
+.taskDeadline {
+  color: $color-text-tertiary;
+}
+
+.taskDeadlineUrgent {
+  color: $color-warning;
+}
+
+.repertoireList {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.repItem {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  border-bottom: 1rpx solid $color-divider;
+  transition: all $transition-base;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.repCover {
+  width: 64rpx;
+  height: 80rpx;
+  border-radius: $radius-xs;
+  margin-right: 16rpx;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.repInfo {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.repName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.repProgress {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.repProgressBar {
+  flex: 1;
+  height: 6rpx;
+  background: $color-divider;
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+
+.repProgressFill {
+  height: 100%;
+  border-radius: 3rpx;
+}
+
+.repProgressText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  min-width: 60rpx;
+  text-align: right;
+}
+
+.empty {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.emptyIcon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+  display: block;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

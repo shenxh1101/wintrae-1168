@@ -1,0 +1,327 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 140rpx;
+}
+
+.tabs {
+  display: flex;
+  background: $color-bg-card;
+  padding: 0 $page-padding;
+  box-shadow: $shadow-card;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tabItem {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  position: relative;
+  transition: all $transition-base;
+}
+
+.tabItemActive {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.tabIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  background: $color-primary-gradient;
+  border-radius: 3rpx;
+}
+
+.unreadBadge {
+  position: absolute;
+  top: 16rpx;
+  right: 30%;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  background: $color-error;
+  color: $color-text-white;
+  font-size: 20rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.listSection {
+  margin-top: $spacing-md;
+}
+
+.listCard {
+  background: $color-bg-card;
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: $spacing-md;
+}
+
+.sectionHeader {
+  padding: 20rpx 28rpx;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  font-weight: $font-weight-medium;
+  background: $color-bg-page;
+}
+
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+  display: block;
+  opacity: 0.5;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.fab {
+  position: fixed;
+  right: 32rpx;
+  bottom: 140rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: $color-primary-gradient;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-white;
+  font-size: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(99, 102, 241, 0.4);
+  transition: all $transition-base;
+  z-index: 100;
+
+  &:active {
+    transform: scale(0.92);
+    box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modalContent {
+  width: 100%;
+  background: $color-bg-card;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx;
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.modalTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.modalClose {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: $color-text-tertiary;
+}
+
+.formGroup {
+  margin-bottom: 24rpx;
+}
+
+.formLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: 12rpx;
+  font-weight: $font-weight-medium;
+}
+
+.formInput {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: $color-bg-page;
+  box-sizing: border-box;
+}
+
+.formTextarea {
+  width: 100%;
+  height: 200rpx;
+  padding: 20rpx;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: $color-bg-page;
+  box-sizing: border-box;
+}
+
+.partSelector {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.partOption {
+  flex: 1;
+  min-width: 120rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  background: $color-bg-page;
+  transition: all $transition-base;
+}
+
+.partOptionActive {
+  border-color: $color-primary;
+  background: $color-bg-soft;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.submitBtn {
+  width: 100%;
+  height: 88rpx;
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.feedbackItem {
+  background: $color-bg-card;
+  padding: 24rpx 28rpx;
+  margin-bottom: 2rpx;
+}
+
+.feedbackHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12rpx;
+}
+
+.feedbackTitle {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  flex: 1;
+}
+
+.feedbackStatus {
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.statusPending {
+  background: rgba(245, 158, 11, 0.1);
+  color: $color-warning;
+}
+
+.statusReplied {
+  background: rgba(59, 130, 246, 0.1);
+  color: $color-info;
+}
+
+.statusResolved {
+  background: rgba(16, 185, 129, 0.1);
+  color: $color-success;
+}
+
+.feedbackContent {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: 12rpx;
+}
+
+.feedbackReply {
+  padding: 16rpx;
+  background: $color-bg-page;
+  border-radius: $radius-sm;
+  margin-top: 12rpx;
+}
+
+.feedbackReplyLabel {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  margin-bottom: 8rpx;
+  font-weight: $font-weight-medium;
+}
+
+.feedbackReplyText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+}
+
+.feedbackMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 12rpx;
+}

@@ -1,0 +1,104 @@
+@use '@/styles/variables.scss' as *;
+
+.item {
+  background: $color-bg-card;
+  padding: 24rpx 28rpx;
+  margin-bottom: 2rpx;
+  position: relative;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.itemUnread {
+  background: $color-bg-soft;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.unreadDot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: $color-error;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  flex: 1;
+  @include text-ellipsis;
+}
+
+.itemUnread .title {
+  font-weight: $font-weight-semibold;
+}
+
+.typeTag {
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+
+.typeNotice {
+  background: rgba(99, 102, 241, 0.1);
+  color: $color-primary;
+}
+
+.typeFeedback {
+  background: rgba(16, 185, 129, 0.1);
+  color: $color-success;
+}
+
+.typeSystem {
+  background: rgba(148, 163, 184, 0.2);
+  color: $color-text-tertiary;
+}
+
+.priorityHigh {
+  background: rgba(239, 68, 68, 0.1);
+  color: $color-error;
+}
+
+.content {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: 12rpx;
+  @include text-ellipsis-multi(2);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.arrow {
+  font-size: $font-size-md;
+  color: $color-text-disabled;
+}

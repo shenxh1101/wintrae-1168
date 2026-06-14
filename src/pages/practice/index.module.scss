@@ -1,0 +1,140 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: $color-bg-card;
+  padding: 32rpx $page-padding;
+  box-shadow: $shadow-card;
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.headerSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: 24rpx;
+}
+
+.partSelector {
+  display: flex;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.partItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 12rpx;
+  border-radius: $radius-md;
+  background: $color-bg-page;
+  transition: all $transition-base;
+  position: relative;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.partItemActive {
+  background: $color-bg-soft;
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.15);
+}
+
+.partIcon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: $color-text-white;
+  margin-bottom: 12rpx;
+}
+
+.partName {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.partItemActive .partName {
+  color: $color-primary;
+}
+
+.listSection {
+  padding: 24rpx $page-padding;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.statsRow {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.statCard {
+  flex: 1;
+  padding: 20rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 36rpx;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  margin-bottom: 8rpx;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.empty {
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.emptyIcon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}

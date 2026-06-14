@@ -1,0 +1,175 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.header {
+  background: $color-primary-gradient;
+  padding: 40rpx $page-padding;
+  color: $color-text-white;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: $font-weight-bold;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: $font-size-md;
+  opacity: 0.9;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  margin-top: 16rpx;
+}
+
+.section {
+  margin: $page-spacing $page-padding 0;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 28rpx;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 20rpx;
+}
+
+.infoItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoIcon {
+  width: 40rpx;
+  font-size: $font-size-lg;
+  margin-right: 16rpx;
+}
+
+.infoContent {
+  flex: 1;
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: 6rpx;
+}
+
+.infoValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.repertoireList {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.repertoireItem {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-bg-hover;
+  }
+}
+
+.repertoireCover {
+  width: 80rpx;
+  height: 100rpx;
+  border-radius: $radius-sm;
+  margin-right: 20rpx;
+  overflow: hidden;
+
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.repertoireInfo {
+  flex: 1;
+}
+
+.repertoireName {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  margin-bottom: 6rpx;
+}
+
+.repertoireMeta {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.arrow {
+  color: $color-text-tertiary;
+  font-size: $font-size-md;
+}
+
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx $page-padding;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: 20rpx;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.btnPrimary {
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
+}
+
+.btnSecondary {
+  background: $color-bg-soft;
+  color: $color-primary;
+}

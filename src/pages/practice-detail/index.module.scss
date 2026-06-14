@@ -1,0 +1,274 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  padding-bottom: 80rpx;
+}
+
+.coverSection {
+  padding: 40rpx $page-padding;
+  text-align: center;
+}
+
+.coverContainer {
+  width: 400rpx;
+  height: 400rpx;
+  margin: 0 auto 32rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.4);
+  position: relative;
+
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.coverOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6) 100%);
+}
+
+.songTitle {
+  font-size: 40rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: 12rpx;
+}
+
+.songSubtitle {
+  font-size: $font-size-md;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.partBadge {
+  display: inline-block;
+  padding: 8rpx 24rpx;
+  border-radius: $radius-round;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-white;
+  margin-top: 16rpx;
+}
+
+.progressSection {
+  padding: 40rpx $page-padding;
+}
+
+.timeRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.timeText {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4rpx;
+  position: relative;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: $color-primary-light;
+  border-radius: 4rpx;
+  transition: width 0.1s linear;
+}
+
+.progressHandle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 24rpx;
+  height: 24rpx;
+  background: $color-text-white;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48rpx;
+  padding: 40rpx 0;
+}
+
+.controlBtn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: $color-text-white;
+  border-radius: 50%;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+
+.playBtn {
+  width: 120rpx;
+  height: 120rpx;
+  background: $color-primary-gradient;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: $color-text-white;
+  box-shadow: 0 8rpx 24rpx rgba(99, 102, 241, 0.4);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
+  }
+}
+
+.speedSection {
+  margin: 0 $page-padding;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: $radius-lg;
+}
+
+.sectionLabel {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16rpx;
+}
+
+.speedOptions {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.speedOption {
+  flex: 1;
+  min-width: 100rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.speedOptionActive {
+  background: $color-primary;
+  color: $color-text-white;
+  font-weight: $font-weight-medium;
+}
+
+.loopSection {
+  margin: 24rpx $page-padding 0;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: $radius-lg;
+}
+
+.loopHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.loopTitle {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loopToggle {
+  padding: 8rpx 20rpx;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  transition: all $transition-base;
+}
+
+.loopToggleActive {
+  background: $color-success;
+  color: $color-text-white;
+}
+
+.loopList {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.loopItem {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: $radius-sm;
+  transition: all $transition-base;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.loopItemActive {
+  background: rgba(99, 102, 241, 0.3);
+  border: 1rpx solid $color-primary-light;
+}
+
+.loopInfo {
+  flex: 1;
+}
+
+.loopName {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  margin-bottom: 4rpx;
+}
+
+.loopTime {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.loopPlayIcon {
+  font-size: 24rpx;
+  color: $color-primary-light;
+}
+
+.bottomTip {
+  text-align: center;
+  padding: 40rpx $page-padding;
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.4);
+}

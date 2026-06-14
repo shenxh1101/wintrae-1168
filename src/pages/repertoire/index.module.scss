@@ -1,0 +1,134 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  padding: 24rpx $page-padding 0;
+  background: $color-bg-card;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  padding: 0 24rpx;
+  background: $color-bg-page;
+  border-radius: 36rpx;
+  margin-bottom: 24rpx;
+
+  input {
+    flex: 1;
+    margin-left: 12rpx;
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    background: transparent;
+  }
+}
+
+.searchIcon {
+  width: 32rpx;
+  height: 32rpx;
+  color: $color-text-tertiary;
+  font-size: 32rpx;
+}
+
+.searchInput {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.categoryScroll {
+  white-space: nowrap;
+  padding-bottom: 20rpx;
+}
+
+.categoryItem {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 16rpx;
+  border-radius: 32rpx;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+}
+
+.categoryActive {
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
+}
+
+.categoryInactive {
+  background: $color-bg-page;
+  color: $color-text-secondary;
+}
+
+.content {
+  padding: $page-spacing $page-padding;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+}
+
+.statItem {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  margin-right: $spacing-md;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.statNumber {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  margin-bottom: 8rpx;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: $spacing-md;
+}
+
+.gridItem {
+  width: calc(50% - 12rpx);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}

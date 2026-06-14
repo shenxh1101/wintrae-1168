@@ -1,0 +1,210 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.calendarSection {
+  background: $color-bg-card;
+  padding: 24rpx $page-padding 32rpx;
+  box-shadow: $shadow-card;
+}
+
+.monthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.monthText {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin: 0 32rpx;
+}
+
+.monthArrow {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: $color-text-secondary;
+  border-radius: 50%;
+  background: $color-bg-page;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-bg-hover;
+    transform: scale(0.9);
+  }
+}
+
+.weekDays {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.weekDay {
+  flex: 1;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  font-weight: $font-weight-medium;
+}
+
+.daysGrid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dayItem {
+  width: calc(100% / 7);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.dayNumber {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+}
+
+.dayEmpty .dayNumber {
+  color: transparent;
+}
+
+.dayOtherMonth .dayNumber {
+  color: $color-text-disabled;
+}
+
+.dayToday {
+  .dayNumber {
+    width: 56rpx;
+    height: 56rpx;
+    border-radius: 50%;
+    background: $color-primary-gradient;
+    color: $color-text-white;
+    font-weight: $font-weight-semibold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
+  }
+}
+
+.dayHasRehearsal::after {
+  content: '';
+  position: absolute;
+  bottom: 12rpx;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: $color-primary;
+}
+
+.dayToday.dayHasRehearsal::after {
+  background: $color-text-white;
+  bottom: 8rpx;
+}
+
+.daySelected {
+  .dayNumber {
+    width: 56rpx;
+    height: 56rpx;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.listSection {
+  padding: 24rpx $page-padding;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionCount {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.leaveModal {
+  padding: 32rpx;
+}
+
+.leaveTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+
+.leaveInput {
+  width: 100%;
+  height: 200rpx;
+  padding: 20rpx;
+  border: 1rpx solid $color-border;
+  border-radius: $radius-md;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 24rpx;
+  background: $color-bg-page;
+  box-sizing: border-box;
+}
+
+.leaveActions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.leaveBtn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.leaveCancel {
+  background: $color-bg-page;
+  color: $color-text-secondary;
+}
+
+.leaveSubmit {
+  background: $color-primary-gradient;
+  color: $color-text-white;
+}

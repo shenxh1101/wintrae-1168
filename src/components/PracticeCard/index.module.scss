@@ -1,0 +1,129 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 24rpx;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.99);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.topRow {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+
+.cover {
+  width: 120rpx;
+  height: 160rpx;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+
+  image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+  @include text-ellipsis;
+}
+
+.composer {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: 12rpx;
+}
+
+.partTag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-white;
+  align-self: flex-start;
+}
+
+.progressRow {
+  margin-bottom: 16rpx;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.progressText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.progressPercent {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.progressBar {
+  width: 100%;
+  height: 8rpx;
+  background: $color-divider;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 4rpx;
+  transition: width $transition-base;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16rpx;
+  border-top: 1rpx solid $color-divider;
+}
+
+.lastPractice {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.practiceBtn {
+  padding: 12rpx 28rpx;
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}

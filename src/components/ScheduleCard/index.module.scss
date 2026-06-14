@@ -1,0 +1,136 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: 28rpx;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.99);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  @include text-ellipsis;
+}
+
+.statusTag {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-left: 16rpx;
+  white-space: nowrap;
+}
+
+.statusUpcoming {
+  background: rgba(245, 158, 11, 0.1);
+  color: $color-warning;
+}
+
+.statusOngoing {
+  background: rgba(16, 185, 129, 0.1);
+  color: $color-success;
+}
+
+.statusCompleted {
+  background: $color-divider;
+  color: $color-text-tertiary;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.infoIcon {
+  width: 32rpx;
+  margin-right: 12rpx;
+  font-size: $font-size-md;
+}
+
+.infoText {
+  flex: 1;
+}
+
+.repertoireRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid $color-divider;
+}
+
+.repertoireTag {
+  padding: 6rpx 14rpx;
+  background: $color-bg-soft;
+  color: $color-primary;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid $color-divider;
+}
+
+.actionBtn {
+  flex: 1;
+  height: 72rpx;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.btnPrimary {
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
+}
+
+.btnSecondary {
+  background: $color-bg-page;
+  color: $color-text-secondary;
+}
+
+.btnSuccess {
+  background: rgba(16, 185, 129, 0.1);
+  color: $color-success;
+}
+
+.btnWarning {
+  background: rgba(245, 158, 11, 0.1);
+  color: $color-warning;
+}
